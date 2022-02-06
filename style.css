@@ -1,0 +1,29 @@
+body {
+  margin: 0px;
+}
+
+.spielfeld {
+  width: 100vw;
+  height: 100vh;
+  background-color: darkgoldenrod;
+  position: relative;
+  transition: all 0.016s ease-in-out;
+}
+
+.paddel {
+  width: 2vw;
+  height: 20vh;
+  background-color: black;
+  position: absolute;
+  transition: all 0.016s ease-in-out;
+}
+
+.links {
+  left: 1vw;
+  top: 1vw;
+}
+
+.rechts {
+  right: 1vw;
+  top: 1vw;
+}
