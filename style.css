@@ -7,7 +7,7 @@ body {
   height: 100vh;
   background-color: darkgoldenrod;
   position: relative;
-  transition: all 0.016s ease-in-out;
+  transition: all 0.01s ease-in-out;
 }
 
 .paddel {
@@ -15,7 +15,7 @@ body {
   height: 20vh;
   background-color: black;
   position: absolute;
-  transition: all 0.016s ease-in-out;
+  transition: all 0.01s ease-in-out;
 }
 
 .links {
