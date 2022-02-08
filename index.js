@@ -130,19 +130,19 @@ function moveBall() {
     ) {
       if (pressedUnten && !pressedOben && ball.vec.y >= 0) {
         ball.vec.x = -ball.vec.x * xSpeedUp;
-        ball.vec.y = ball.vec.y * 1.6;
+        ball.vec.y = ball.vec.y * 1.6 + 2.5;
         console.log("schneller", ball.vec.y, ball.vec.x);
       } else if (pressedOben && !pressedUnten && ball.vec.y <= 0) {
         ball.vec.x = -ball.vec.x * xSpeedUp;
-        ball.vec.y = ball.vec.y * 1.6;
+        ball.vec.y = ball.vec.y * 1.6 - 2.5;
         console.log("schneller", ball.vec.y, ball.vec.x);
       } else if (pressedOben && !pressedUnten && ball.vec.y >= 0) {
-        ball.vec.x = -ball.vec.x;
-        ball.vec.y = ball.vec.y * 0.8;
+        ball.vec.x = -ball.vec.x * 0.95;
+        ball.vec.y = ball.vec.y * 0.8 - 1.6;
         console.log("langsamer", ball.vec.y, ball.vec.x);
       } else if (pressedUnten && !pressedOben && ball.vec.y <= 0) {
-        ball.vec.x = -ball.vec.x;
-        ball.vec.y = ball.vec.y * 0.8;
+        ball.vec.x = -ball.vec.x * 0.95;
+        ball.vec.y = ball.vec.y * 0.8 + 1.6;
         console.log("langsamer", ball.vec.y, ball.vec.x);
       } else {
         ball.vec.x = -ball.vec.x * xSpeedUp;
