@@ -130,11 +130,11 @@ function moveBall() {
     ) {
       if (pressedUnten && !pressedOben && ball.vec.y >= 0) {
         ball.vec.x = -ball.vec.x * xSpeedUp;
-        ball.vec.y = ball.vec.y * 1.3;
+        ball.vec.y = ball.vec.y * 1.6;
         console.log("schneller", ball.vec.y, ball.vec.x);
       } else if (pressedOben && !pressedUnten && ball.vec.y <= 0) {
         ball.vec.x = -ball.vec.x * xSpeedUp;
-        ball.vec.y = ball.vec.y * 1.3;
+        ball.vec.y = ball.vec.y * 1.6;
         console.log("schneller", ball.vec.y, ball.vec.x);
       } else if (pressedOben && !pressedUnten && ball.vec.y >= 0) {
         ball.vec.x = -ball.vec.x;
