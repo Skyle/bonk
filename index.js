@@ -41,6 +41,7 @@ const padding = 8;
 const ballSize = 24;
 const xSpeedUp = 1.05;
 const fpsFaktor = 16.666666666666668;
+const ySpeedUp = 1.36;
 
 window.onload = () => {
   init();
@@ -130,11 +131,11 @@ function moveBall() {
     ) {
       if (pressedUnten && !pressedOben && ball.vec.y >= 0) {
         ball.vec.x = -ball.vec.x * xSpeedUp;
-        ball.vec.y = ball.vec.y * 1.6 + 2.5;
+        ball.vec.y = ball.vec.y * ySpeedUp + 2.5;
         console.log("schneller", ball.vec.y, ball.vec.x);
       } else if (pressedOben && !pressedUnten && ball.vec.y <= 0) {
         ball.vec.x = -ball.vec.x * xSpeedUp;
-        ball.vec.y = ball.vec.y * 1.6 - 2.5;
+        ball.vec.y = ball.vec.y * ySpeedUp - 2.5;
         console.log("schneller", ball.vec.y, ball.vec.x);
       } else if (pressedOben && !pressedUnten && ball.vec.y >= 0) {
         ball.vec.x = -ball.vec.x * 0.95;
