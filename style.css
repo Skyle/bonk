@@ -20,6 +20,16 @@ body {
   z-index: 10;
 }
 
+.links {
+  left: 12px;
+  top: 45%;
+}
+
+.rechts {
+  right: 12px;
+  top: 45%;
+}
+
 .linie {
   position: absolute;
   left: 50%;
@@ -31,22 +41,18 @@ body {
 
 .optionen {
   position: absolute;
-  left: 50%;
-  bottom: 0%;
-  background-color: white;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  bottom: 0px;
+}
+
+.optionen > div {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   padding: 1rem;
-}
-
-.links {
-  left: 12px;
-  top: 12px;
-}
-
-.rechts {
-  right: 12px;
-  top: 12px;
+  background-color: white;
+  display: flex;
 }
 
 .ball {
@@ -63,7 +69,3 @@ body {
 /*
 Helper
 */
-
-.flex {
-  display: flex;
-}
