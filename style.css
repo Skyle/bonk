@@ -10,8 +10,10 @@ body {
   --einheit: 12px;
 }
 
-@import url("FiraCode-VF.ttf");
-
+@font-face {
+  font-family: "Fira Code"; /*You can use whatever name that you want*/
+  src: url("/font/FiraCode-VF.ttf");
+}
 .spielfeld {
   background-color: var(--hintergrund);
   width: 100vw;
@@ -25,6 +27,13 @@ body {
   height: 24px;
   background-color: #171717;
   border-radius: 50%;
+}
+
+.paddel {
+  position: absolute;
+  background-color: #171717;
+  height: 128px;
+  width: 12px;
 }
 
 .divider {
