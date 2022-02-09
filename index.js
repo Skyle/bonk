@@ -78,7 +78,6 @@ function changeEventHandler(event) {
 
 // Animations-Loop
 function update() {
-  console.log(optionen.running.wert);
   if (optionen.running.wert) {
     move();
     collisionsCheck();
