@@ -36,6 +36,7 @@ const ball = {
   name: "ball",
   size: 24,
   element: null,
+  speed: 0,
   pos: { x: 0, y: 0 },
   vec: { x: 0, y: 0 },
 };
@@ -51,7 +52,10 @@ const paddel = {
   vec: { x: 0, y: 0 },
 };
 const counter = { count: 0, element: null };
+
+// Paar Globale Variablen vordeklarieren
 let animation = null;
+let speedCounterElement = null;
 
 // Wenn der Browser die ganze Seite geladen hat, beginnen wir damit unser Programm aufzubauen
 window.onload = () => {
@@ -59,6 +63,10 @@ window.onload = () => {
   ball.element = document.getElementById("ball");
   // Und wird in das Array unserer Entitäten gepusht
   entities.push(ball);
+
+  // Geschwindigkeitszählerelement
+
+  speedCounterElement = document.getElementById("speedCounter");
 
   // Der Punktezähler bekommt sein Element
   counter.element = document.getElementById("counter");
@@ -103,7 +111,7 @@ function update() {
   if (optionen.running.wert) {
     move();
     collisionsCheck();
-    const speed = Math.sqrt(ball.vec.x ** 2 + ball.vec.y ** 2);
+    updateBallSpeed();
     animation = window.requestAnimationFrame(update);
   }
 }
@@ -231,12 +239,14 @@ function collisionsCheck() {
       ball.pos.y + ball.size >= paddel.pos.y &&
       ball.pos.y <= paddel.pos.y + paddel.height
     ) {
-      ball.vec.x = -ball.vec.x;
+      if (pressedUnten && !pressedOben && ball.vec.y >= 0) {
+        ball.vec.x = -ball.vec.x * 1.1;
+        ball.vec.y = ball.vec.y * 1.4;
+      }
       incrementCounter();
     } else {
       console.log("tod");
-      stop();
-      start();
+      reset();
     }
   }
 }
@@ -273,4 +283,10 @@ function obenlasser(e) {
   if (e.key === "ArrowDown") {
     pressedUnten = false;
   }
+}
+
+// Speedupdater
+function updateBallSpeed() {
+  ball.speed = Math.sqrt(ball.vec.x ** 2 + ball.vec.y ** 2);
+  speedCounterElement.innerHTML = ball.speed.toFixed(2) + " pps";
 }
