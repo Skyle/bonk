@@ -1,245 +1,195 @@
-let linkesPaddel = {
-  element: document.getElementById("links"),
-  pos: { y: 0 },
-  vec: { y: 0 },
+// Strikter Modus um zu vermeiden, dass undeklarierte Variablen genutzt werden
+"use strict";
+// Variablen werden deklariert und manche auch schon initialisiert
+// Die Ballgröße in Pisel
+let ballSize = 24;
+
+// TODO Array mit allen im Spiel vorhandenen Entitäten (Ball, Paddel)
+let entities = [];
+
+// DEPRECATED Erste Zeit für den Framecounter
+let letzteSekunde = Date.now();
+
+// Die kompletten Optionen als Object
+// Die Elemente werden erst gesetzt, wenn das Fenster geladen ist
+const optionen = {
+  running: { element: null, wert: false },
+  clickerElement: null,
+  ausgefahren: false,
+  speed: {
+    wert: 1,
+    faktor: 1,
+    element: null,
+  },
+  // Zufallfaktoren um den Start etwas abwechselnd zu gestalten
+  startParameter: {
+    xMin: 1,
+    xMax: 2,
+    yMin: -0.6,
+    yMax: 0.6,
+  },
 };
-let rechtesPaddel = {
-  element: document.getElementById("rechts"),
-  pos: { y: 0 },
-  vec: { y: 0 },
-};
-let ball = {
-  element: document.getElementById("ball"),
+const ball = {
+  name: "ball",
+  element: null,
   pos: { x: 0, y: 0 },
   vec: { x: 0, y: 0 },
 };
+const counter = { count: 0, element: null };
+let animation = null;
 
-let runningCheckbox = document.getElementById("running");
-let resetButton = document.getElementById("reset");
-resetButton.onclick = () => {
-  resetAll();
+// Wenn der Browser die ganze Seite geladen hat, beginnen wir damit unser Programm aufzubauen
+window.onload = () => {
+  // Unser Ball bekommt sein DOM-Element zugeordnet
+  ball.element = document.getElementById("ball");
+  // Und wird in das Array unserer Entitäten gepusht
+  entities.push(ball);
+
+  // Der Punktezähler bekommt sein Element
+  counter.element = document.getElementById("counter");
+
+  // Die Checkbox, die bestimmt ob das Spiel läuft, wird referenziert
+  optionen.running.element = document.getElementById("runningCheckbox");
+
+  // Der Slider für die Geschwindigkeit wird seinem Element zugeordnet
+  optionen.speed.element = document.getElementById("speedSlider");
+
+  // Die Optionen bekommen ihr Element
+  optionen.clickerElement = document.getElementById("optionen-clicker");
+
+  // Läuft Checkbox
+  optionen.running.element.onclick = (e) => {
+    if (e.target.checked) {
+      resume();
+    } else {
+      pause();
+    }
+  };
+  reset();
+  start();
+};
+
+// Definition der onChange Handler
+function changeEventHandler(event) {
+  optionen.speed.faktor = event.target.value;
   stop();
   start();
-};
+}
 
-let counterElement = document.getElementById("counter");
-let speedElement = document.getElementById("speed");
-
-let framesInterval;
-runningCheckbox.onclick = (e) => {
-  if (e.target.checked) {
-    resume();
-  } else {
-    pause();
+// Animations-Loop
+function update() {
+  console.log(optionen.running.wert);
+  if (optionen.running.wert) {
+    move();
+    collisionsCheck();
+    const speed = Math.sqrt(ball.vec.x ** 2 + ball.vec.y ** 2);
+    animation = window.requestAnimationFrame(update);
   }
-};
+}
 
-let pressedOben = false;
-let pressedUnten = false;
-
-// Globale Variablen
-const paddelSpeed = 12;
-const paddelSize = 128;
-const padding = 8;
-const ballSize = 24;
-const xSpeedUp = 1.05;
-const xSlow = 0.98;
-let fpsFaktor = 16.666666666666668;
-fpsFaktor = 15.4;
-const ySpeedUp = 1.24;
-let counter = 0;
-let ballSpeed = 0;
-
-window.onload = () => {
+// Falls die Fenstergröße verändert wird, wird das Spiel zurückgesetzt
+/* window.onresize = () => {
+  stop();
+  reset();
   start();
 };
+*/
 
-document.addEventListener("keydown", untendruecker);
-document.addEventListener("keyup", obenlasser);
-
-// Pausiert das Spielt und resettet den Ball wenn man das Fenster resizet
-window.addEventListener("resize", function () {
-  resetAll();
-  clearInterval(framesInterval);
-  runningCheckbox.checked = false;
-});
-function untendruecker(e) {
-  if (e.key === "ArrowUp") {
-    pressedOben = true;
-  }
-  if (e.key === "ArrowDown") {
-    pressedUnten = true;
-  }
+// Setzt das Spielfeld auf den Ausgangszustand
+function reset() {
+  // Zentrieren des Balls
+  centerBall();
+  counter.count = 0;
 }
 
-function obenlasser(e) {
-  if (e.key === "ArrowUp") {
-    pressedOben = false;
-  }
-  if (e.key === "ArrowDown") {
-    pressedUnten = false;
-  }
-}
-// Die Hauptschleifenfunktion
-// Wird jede Aktualisierung aufgerufen und aktualisiert die Spieldaten
-function update() {
-  // Als erstes darf der Spieler sein Paddel bewergen
-  moveRechtesPaddel();
-  moveBall();
-  ballSpeed = calculateSpeed(ball.vec.x, ball.vec.y);
-  speedElement.innerHTML = ballSpeed;
-}
-
-// Benutzereingaben werden überprüft und dementsprechend das Passel bewegt
-function moveRechtesPaddel() {
-  // Es wird immer nur die Eingabe akzeptiert, bei der nur eine Taste gedrückt wird
-  // Falls die Pfeiltaste nach Unten gedrückt wird
-  if (pressedUnten && !pressedOben) {
-    // Das Paddel wird um den paddelSpeed nach unten versetzt
-    rechtesPaddel.pos.y = rechtesPaddel.pos.y + paddelSpeed;
-    // Falls das Paddel unten gegen den Fensterrand kommt, wird es auf den letzten möglichen Wert gesetzt
-    if (rechtesPaddel.pos.y + 128 + padding > window.innerHeight) {
-      rechtesPaddel.pos.y = window.innerHeight - 128 - padding;
-    }
-    // Jetzt erfolgt die DOM-Manipulation
-    updatePaddelPosition(rechtesPaddel.pos.y);
-  }
-  // Und das gleiche nochmal um zu checken, ob das Paddel oben gegenkommt
-  if (pressedOben && !pressedUnten) {
-    rechtesPaddel.pos.y = rechtesPaddel.pos.y - paddelSpeed;
-    if (rechtesPaddel.pos.y < padding) {
-      rechtesPaddel.pos.y = padding;
-    }
-    updatePaddelPosition(rechtesPaddel.pos.y, "rechts");
-  }
-}
-
-// Entfernt das Pixel-Suffix aus einem String
-// vielleicht deprecated
-function removePixel(hoehe) {
-  return parseFloat(hoehe.substring(0, hoehe.length - 2));
-}
-
-function moveBall() {
-  ball.pos.x = ball.pos.x + ball.vec.x;
-  ball.pos.y = ball.pos.y + ball.vec.y;
-  if (ball.pos.x > window.innerWidth) {
-    stop();
-    start();
-  }
-  if (ball.pos.x <= 0) {
-    ball.vec.x = -ball.vec.x;
-  }
-  if (ball.pos.y <= 0) {
-    ball.vec.y = -ball.vec.y;
-  }
-  if (ball.pos.y + ballSize >= window.innerHeight) {
-    ball.vec.y = -ball.vec.y;
-  }
-  // Ball und Paddel haben die gleiche x-Position
-  if (ball.pos.x + 2 * ballSize >= window.innerWidth) {
-    // Ball trifft den Bereich der y-Achse auf der sich das Paddel befindet
-    // Damit treffen sich Ball und Paddel
-    // TODO Es können mehrere treffen direkt hintereinander erfolgen
-    if (
-      (ball.pos.y >= rechtesPaddel.pos.y &&
-        ball.pos.y <= rechtesPaddel.pos.y + paddelSize) ||
-      (ball.pos.y + ballSize >= rechtesPaddel.pos.y &&
-        ball.pos.y + ballSize <= rechtesPaddel.pos.y + paddelSize)
-    ) {
-      // Bei jedem Treffer wird er Counter um 1 erhöht
-      counter++;
-      counterElement.innerHTML = counter;
-      // Der Ball soll abhängig von der Bewergung des Paddels beschleunigt werden
-      // Es gibt 2 Checks, jeweils 1 für hoch und runter
-      // Ball und Paddel bewegen sich in die selbe Richtung
-      if (pressedUnten && !pressedOben && ball.vec.y >= 0) {
-        ball.vec.x = -ball.vec.x * xSpeedUp;
-        ball.vec.y = ball.vec.y * ySpeedUp + 1.5;
-      } else if (pressedOben && !pressedUnten && ball.vec.y <= 0) {
-        ball.vec.x = -ball.vec.x * xSpeedUp;
-        ball.vec.y = ball.vec.y * ySpeedUp - 1.5;
-        // Ball und Paddel bewegen sich in die entgegengesetzte Richtung
-      } else if (pressedOben && !pressedUnten && ball.vec.y >= 0) {
-        ball.vec.x = -ball.vec.x * xSlow;
-        ball.vec.y = ball.vec.y * 0.9 - 0.8;
-      } else if (pressedUnten && !pressedOben && ball.vec.y <= 0) {
-        ball.vec.x = -ball.vec.x * xSlow;
-        ball.vec.y = ball.vec.y * 0.9 + 0.8;
-      } else {
-        ball.vec.x = -ball.vec.x * xSpeedUp;
-      }
-    }
-  }
-  updateBallPosition(ball.pos.x, ball.pos.y);
-}
-
-function calculateSpeed(x, y) {
-  return Math.sqrt(x ** 2 + y ** 2);
-}
-
-function resetPaddel(seite) {
-  if (seite === "rechts") {
-    const halbeHoehe = window.innerHeight / 2;
-    rechtesPaddel.pos.y = halbeHoehe - 64;
-    updatePaddelPosition(halbeHoehe - 64, seite);
-  }
-}
-
-function resetBall() {
-  const halbeHoehe = window.innerHeight / 2;
-  const halbeWeite = window.innerWidth / 2;
-  ball.pos.x = halbeWeite - 12;
-  ball.pos.y = halbeHoehe - 12;
-  ball.vec.x = 0;
-  ball.vec.y = 0;
-  updateBallPosition(ball.pos.x, ball.pos.y);
-}
-
-function updateBallPosition(x, y) {
-  ball.element.style.left = x + "px";
-  ball.element.style.top = y + "px";
-}
-
-function updatePaddelPosition(y, seite = "rechts") {
-  if (seite === "rechts") {
-    rechtesPaddel.element.style.top = y + "px";
-  } else {
-    linkesPaddel.element.style.top = y + "px";
-  }
-}
-// Steuerfunktionen zur Animation
-
-function resetAll() {
-  resetBall();
-  resetPaddel("rechts");
-  resetPaddel("links");
-  counter = 0;
-  counterElement.innerHTML = 0;
-}
-
+// Funktion zum Spielstart
 function start() {
-  resetAll();
-  const yMin = -3;
-  const yMax = 3;
-  const xMax = 1.2;
-  const xMin = 0.8;
-  const xRandom = Math.random() * (xMax - xMin) + xMin;
-  const startVectorX = paddelSpeed * 0.8 * xRandom;
-  ball.vec.x = startVectorX;
-  const startVectorY = Math.random() * (yMax - yMin) + yMin;
-  ball.vec.y = startVectorY;
-  framesInterval = setInterval(update, fpsFaktor);
-}
-
-function stop() {
-  clearInterval(framesInterval);
+  giveBallInitialVelocity();
+  optionen.running.wert = true;
+  update();
+  console.log("Animation wird begonnen");
 }
 
 function pause() {
-  clearInterval(framesInterval);
+  optionen.running.wert = false;
+}
+
+function stop() {
+  optionen.running.wert = false;
+  window.cancelAnimationFrame(animation);
+  reset();
 }
 
 function resume() {
-  framesInterval = setInterval(update, fpsFaktor);
+  optionen.running.wert = true;
+  update();
+}
+
+// Funktionen zur Bewegungssteuerung
+function move() {
+  moveBall();
+}
+
+function centerBall() {
+  const halbeWeite = window.innerWidth / 2;
+  const halbeHoehe = window.innerHeight / 2;
+  ball.pos.x = halbeWeite - ballSize / 2;
+  ball.pos.y = halbeHoehe - ballSize / 2;
+  translateBall(ball.pos.x, ball.pos.y);
+}
+
+function moveBall() {
+  ball.pos.x += ball.vec.x;
+  ball.pos.y += ball.vec.y;
+  translateBall(ball.pos.x, ball.pos.y);
+}
+
+function translateBall(xCord, yCord) {
+  ball.element.style.transform = "translate(" + xCord + "px ," + yCord + "px)";
+}
+
+function giveBallInitialVelocity() {
+  const initialXVelo =
+    optionen.speed.wert *
+    optionen.speed.faktor *
+    (Math.random() *
+      (optionen.startParameter.xMax - optionen.startParameter.xMin) +
+      optionen.startParameter.xMin);
+  const initialYVelo =
+    optionen.speed.wert *
+    optionen.speed.faktor *
+    (Math.random() *
+      (optionen.startParameter.yMax - optionen.startParameter.yMin) +
+      optionen.startParameter.yMin);
+
+  ball.vec.x = initialXVelo;
+  ball.vec.y = initialYVelo;
+}
+
+// Kollisionsabfragen
+function collisionsCheck() {
+  // Überprüft ob der Ball auf der rechten Seite gegen den Bildschirmrand kommt
+  if (ball.pos.x + ballSize >= window.innerWidth) {
+    ball.vec.x = -ball.vec.x;
+    incrementCounter();
+  }
+  // Überprüft ob der Ball auf der linken Seite gegen den Bildschirmrand kommt
+  if (ball.pos.x <= 0) {
+    ball.vec.x = -ball.vec.x;
+    incrementCounter();
+  }
+  if (ball.pos.y <= 0) {
+    ball.vec.y = -ball.vec.y;
+    incrementCounter();
+  }
+  if (ball.pos.y + ballSize >= window.innerHeight) {
+    ball.vec.y = -ball.vec.y;
+    incrementCounter();
+  }
+}
+
+// DOM-Manipulationsfuntionen
+function incrementCounter() {
+  counter.count++;
+  counter.element.innerHTML = counter.count;
 }

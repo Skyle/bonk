@@ -1,0 +1,87 @@
+body {
+  margin: 0px;
+  font-family: "SF Pro";
+  height: 100%;
+  overflow: hidden;
+}
+
+.spielfeld {
+  width: 100vw;
+  height: 100vh;
+  background-color: darkgoldenrod;
+  position: relative;
+}
+
+.paddel {
+  width: 12px;
+  height: 128px;
+  background-color: black;
+  position: absolute;
+  z-index: 10;
+}
+
+.links {
+  left: 12px;
+  top: 45%;
+}
+
+.rechts {
+  right: 12px;
+  top: 45%;
+}
+
+.linie {
+  position: absolute;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-left: 1px dotted black;
+  z-index: 0;
+}
+
+.optionen {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  bottom: 0px;
+}
+
+.optionen > div {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 1rem;
+  background-color: white;
+  display: flex;
+}
+
+.counter {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  top: 0px;
+}
+
+.counter > div {
+  padding: 1rem;
+  background-color: darkgoldenrod;
+  border-bottom: 1px dotted black;
+  font-size: 2.5rem;
+  display: flex;
+}
+
+.ball {
+  top: 50%;
+  left: 50%;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  background-color: black;
+  z-index: 10;
+  border-radius: 50%;
+}
+
+/*
+Helper
+*/

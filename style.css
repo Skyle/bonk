@@ -1,87 +1,89 @@
 body {
   margin: 0px;
-  font-family: "SF Pro";
-  height: 100%;
   overflow: hidden;
+  font-family: "Fira Code";
+  user-select: none;
 }
 
+:root {
+  --hintergrund: #ca8a04;
+  --einheit: 12px;
+}
+
+@import url("FiraCode-VF.ttf");
+
 .spielfeld {
+  background-color: var(--hintergrund);
   width: 100vw;
   height: 100vh;
-  background-color: darkgoldenrod;
   position: relative;
 }
 
-.paddel {
-  width: 12px;
-  height: 128px;
-  background-color: black;
-  position: absolute;
-  z-index: 10;
-}
-
-.links {
-  left: 12px;
-  top: 45%;
-}
-
-.rechts {
-  right: 12px;
-  top: 45%;
-}
-
-.linie {
-  position: absolute;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  border-left: 1px dotted black;
-  z-index: 0;
-}
-
-.optionen {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  bottom: 0px;
-}
-
-.optionen > div {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  padding: 1rem;
-  background-color: white;
-  display: flex;
-}
-
-.counter {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  top: 0px;
-}
-
-.counter > div {
-  padding: 1rem;
-  background-color: darkgoldenrod;
-  border-bottom: 1px dotted black;
-  font-size: 2.5rem;
-  display: flex;
-}
-
 .ball {
-  top: 50%;
-  left: 50%;
-  height: 24px;
-  width: 24px;
   position: absolute;
-  background-color: black;
-  z-index: 10;
+  width: 24px;
+  height: 24px;
+  background-color: #171717;
   border-radius: 50%;
 }
 
+.divider {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#262626, #262626) no-repeat center/2px 100%;
+}
+
+.toptainer {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.bottomtainer {
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.optionen {
+  background-color: white;
+  padding: var(--einheit);
+  border-top-left-radius: var(--einheit);
+  border-top-right-radius: var(--einheit);
+}
+
+.optionen-clicker {
+  cursor: pointer;
+  font-size: 1.25rem;
+}
 /*
-Helper
+
+.optionen-picker {
+  height: 0;
+  overflow: hidden;
+  animation: slide 500ms ease 1s forwards;
+}
+
+@keyframes slide {
+  from {
+    height: 0;
+  }
+  to {
+    height: 50px;
+  }
+}
+
 */
+
+.tafel {
+  padding: var(--einheit);
+  background-color: var(--hintergrund);
+}
+
+.counter {
+  font-size: 2.25rem;
+}
