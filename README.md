@@ -1,2 +1,2 @@
-# bonk - Pong Klon
-## HTML, CSS, JS
+# bonk
+## speedin points
