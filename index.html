@@ -4,47 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
     <script src="index.js"></script>
     <title>bonk</title>
   </head>
   <body>
-    <div class="spielfeld">
-      <div class="divider"></div>
-      <div class="toptainer">
-        <div class="tafel"><div id="counter" class="counter">0</div></div>
-      </div>
-      <div class="bottomtainer">
-        <div class="optionen">
-          <div class="optionen-clicker" id="optionen-clicker">Optionen</div>
-          <div class="optionen-picker">
-            <div>
-              <input
-                type="checkbox"
-                name="runningCheckbox"
-                id="runningCheckbox"
-                checked="true"
-              />
-              <label for="runningCheckbox">läuft</label>
-            </div>
-            <div>
-              <input
-                type="range"
-                min="0"
-                max="8"
-                step="any"
-                value="2"
-                id="speedSlider"
-                onchange="changeEventHandler(event)"
-              />
-            </div>
-            <div id="speedCounter">0 ppf</div>
-          </div>
-        </div>
-      </div>
-      <div id="ball" class="ball"></div>
-      <div id="paddel" class="paddel"></div>
-    </div>
+    <div id="spielfeld"></div>
   </body>
 </html>

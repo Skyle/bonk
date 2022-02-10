@@ -1,0 +1,98 @@
+body {
+  margin: 0px;
+  overflow: hidden;
+  font-family: "Fira Code";
+  user-select: none;
+}
+
+:root {
+  --hintergrund: #ca8a04;
+  --einheit: 12px;
+}
+
+@font-face {
+  font-family: "Fira Code"; /*You can use whatever name that you want*/
+  src: url("/font/FiraCode-VF.ttf");
+}
+.spielfeld {
+  background-color: var(--hintergrund);
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.ball {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: #171717;
+  border-radius: 50%;
+}
+
+.paddel {
+  position: absolute;
+  background-color: #171717;
+  height: 128px;
+  width: 12px;
+}
+
+.divider {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#262626, #262626) no-repeat center/2px 100%;
+}
+
+.toptainer {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.bottomtainer {
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.optionen {
+  background-color: white;
+  padding: var(--einheit);
+  border-top-left-radius: var(--einheit);
+  border-top-right-radius: var(--einheit);
+}
+
+.optionen-clicker {
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+/*
+
+.optionen-picker {
+  height: 0;
+  overflow: hidden;
+  animation: slide 500ms ease 1s forwards;
+}
+
+@keyframes slide {
+  from {
+    height: 0;
+  }
+  to {
+    height: 50px;
+  }
+}
+
+*/
+
+.tafel {
+  padding: var(--einheit);
+  background-color: var(--hintergrund);
+}
+
+.counter {
+  font-size: 2.25rem;
+}
