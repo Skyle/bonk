@@ -3,6 +3,7 @@ const spiel = {
   running: true,
   animation: null,
   speed: 2,
+  grav: 0.2,
   spielfeld: { element: null },
 };
 
@@ -47,11 +48,18 @@ function createBall(x, y, vx, vy) {
   return ball;
 }
 
+window.onresize = function () {
+  for (const ball of spiel.baelle) {
+    ball.vec.x += Math.random() < 0.5 ? -1 : 1;
+  }
+};
+
 function update() {
   if (spiel.running) {
     for (const ball of spiel.baelle) {
+      ball.vec.y = ball.vec.y + spiel.grav;
       ball.pos.x = ball.pos.x + ball.vec.x * spiel.speed;
-      ball.pos.y = ball.pos.y + ball.vec.y * spiel.speed;
+      ball.pos.y = ball.pos.y + ball.vec.y * spiel.speed - spiel.grav;
       if (ball.pos.x + ball.size > window.innerWidth) {
         const mehr = ball.pos.x + ball.size - window.innerWidth;
         ball.pos.x = window.innerWidth - mehr - ball.size;
@@ -59,7 +67,8 @@ function update() {
       } else if (ball.pos.y + ball.size > window.innerHeight) {
         const mehr = ball.pos.y + ball.size - window.innerHeight;
         ball.pos.y = window.innerHeight - mehr - ball.size;
-        ball.vec.y = -ball.vec.y;
+        ball.vec.y = -ball.vec.y * 0.85;
+        ball.vec.x = ball.vec.x * 0.85;
       } else if (ball.pos.x <= 0) {
         const mehr = 0 - ball.pos.x;
         ball.pos.x = mehr;
